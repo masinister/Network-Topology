@@ -28,14 +28,16 @@ Vagrant.configure(2) do |config|
      sudo apt-get -y upgrade
      # Build Python 2.7.12 from source
      sudo apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev zlib1g-dev
-     sudo wget https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz
-
-     sudo tar xzf Python-3.8.3.tgz
-     cd Python-3.8.3
-     sudo ./configure --enable-optimizations
-     sudo make altinstall
-
-     sudo apt-get install -y libssl-dev curl python3-pip
+     wget https://www.python.org/ftp/python/2.7.12/Python-2.7.12.tgz
+     tar -xf Python-2.7.12.tgz
+     cd Python-2.7.12
+     ./configure
+     make && sudo make install
+     cd .. && rm -f Python-2.7.12.tgz && rm -rf Python-2.7.12
+     # get pip
+     curl -O https://bootstrap.pypa.io/pip/2.7/get-pip.py
+     sudo python get-pip.py
+     rm -f get-pip.py
 
      # Set correct permissions for bash scripts
      find /vagrant -name "*.sh" | xargs chmod -v 744
@@ -50,11 +52,12 @@ Vagrant.configure(2) do |config|
      sudo pip install nbconvert
      sudo pip install numpy
      sudo pip install matplotlib
-     sudo apt-get install -y mininet
-     sudo apt-get install -y python-numpy
-     sudo apt-get install -y python-matplotlib
-     sudo apt-get install -y whois
+     sudo pip install networkx
      sudo pip install ipaddress
+     # sudo apt-get install -y mininet
+     # sudo apt-get install -y python-numpy
+     # sudo apt-get install -y python-matplotlib
+     # sudo apt-get install -y whois
 
      # Start in /vagrant instead of /home/vagrant
      if ! grep -Fxq "cd /vagrant" /home/vagrant/.bashrc
