@@ -14,13 +14,7 @@ class TestTopo(Topo):
             host = self.addHost('h%s' % h)
             self.addLink(host, switch, delay='50ms', max_queue_size = 10)
 
-
-if __name__ == '__main__':
-    seconds = 3
-    topo = TestTopo()
-    net = Mininet(topo = topo, link = TCLink, controller = OVSController)
-
-
+def testone(net):
     net.start()
     hosts = net.hosts
     popens = {}
@@ -36,3 +30,9 @@ if __name__ == '__main__':
             print("<%s>: %s" % (host.name, line))
 
     net.stop()
+
+if __name__ == '__main__':
+    seconds = 3
+    topo = TestTopo()
+    net = Mininet(topo = topo, link = TCLink, controller = OVSController)
+    testone(net)
