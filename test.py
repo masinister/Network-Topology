@@ -38,7 +38,7 @@ def testone(net):
                 sent += v[0]
                 lost += v[1]
     net.stop()
-    print(sent, lost)
+    return sent, lost
 
 if __name__ == '__main__':
     seconds = 3
