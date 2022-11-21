@@ -26,6 +26,7 @@ def testone(net):
         # g = random.choice(hosts)
         for g in hosts:
             popens[(h,g)] = h.popen("ping -c 100 -W 0.5 -i 0.01 -q {}".format(g.IP()))
+            popens[(h,g)] = h.popen("ping -w 1 -i 0.01 -q {}".format(g.IP()))
 
     # Monitor them and print output
     sent = 0
