@@ -23,11 +23,11 @@ class GraphTopo(Topo):
         for u, v in G.edges:
             print(u,v)
             if u in H:
-                self.addLink(hosts[u], switches[v], delay='50ms', max_queue_size = 10)
+                self.addLink(hosts[u], switches[v], delay='20ms', max_queue_size = 10)
             elif v in H:
-                self.addLink(switches[u], hosts[v], delay='50ms', max_queue_size = 10)
+                self.addLink(switches[u], hosts[v], delay='20ms', max_queue_size = 10)
             else:
-                self.addLink(switches[u], switches[v], delay='50ms', max_queue_size = 10)
+                self.addLink(switches[u], switches[v], delay='20ms', max_queue_size = 10)
 
 if __name__ == '__main__':
     graph = nx.grid_graph([3,3])
