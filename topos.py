@@ -34,4 +34,5 @@ if __name__ == '__main__':
     hosts = [(0,0),(0,2),(2,0),(2,2)]
     topo = GraphTopo(graph, hosts)
     net = Mininet(topo = topo, link = TCLink, controller = OVSController)
-    testone(net)
+    sent, lost = testone(net)
+    print(sent, lost)
