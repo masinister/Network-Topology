@@ -1,4 +1,4 @@
-from matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 import matplotlib
 import numpy as np
 import pandas as pd
