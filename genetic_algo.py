@@ -104,3 +104,9 @@ class GA():
     # plot
     def plot_1d(self, iter_time=200):
         pass
+
+
+func = lambda x:np.sin(10*x)*x + np.cos(2*x)*x
+ga = GA([[np.random.rand()*5] for _ in range(100)], [(0,5)], DNA_SIZE=10, func=func)
+
+print(ga.log())
