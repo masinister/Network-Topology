@@ -21,13 +21,13 @@ def testone(topo):
     hosts = net.hosts
     popens = {}
 
-    print( "Starting test..." )
+    # print( "Starting test..." )
     for h in hosts:
         # Start pings
         # g = random.choice(hosts)
         for g in hosts:
-            # popens[(h,g)] = h.popen("ping -c 100 -W 0.5 -i 0.01 -q {}".format(g.IP()))
-            popens[(h,g)] = h.popen("ping -w 1 -i 0.01 -q {}".format(g.IP()))
+            # popens[(h,g)] = h.popen("ping -c 10 -W 0.1 -i 0.01 -q {}".format(g.IP()))
+            popens[(h,g)] = h.popen("ping -w 1 -i 0.001 -q {}".format(g.IP()))
 
     # Monitor them and print output
     sent = 0
