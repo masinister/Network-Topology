@@ -27,7 +27,7 @@ class TopoOptimizer():
         return [self.random_individual() for _ in range(self.pop_size)]
 
     def random_individual(self):
-        num_edges = np.random.choice(len(self.possible_edges)/2)
+        num_edges = np.random.choice(int(np.sqrt(len(self.possible_edges))))
         indices = np.random.choice(len(self.possible_edges), num_edges, replace=False)
         edges = [self.possible_edges[i] for i in indices]
         return Individual(self.nodes, self.layers[0], edges)
@@ -38,9 +38,10 @@ class TopoOptimizer():
                 individual.fitness = 0
             else:
                 sent, lost = testone(individual.topo)
-                individual.fitness = (1.0 - float(len(individual.edges))/float(len(self.possible_edges))) * (1.0 - float(lost)/float(sent))
+                throughput = 1.0 - float(lost)/float(sent)
+                efficiency = 1.0 - float(len(individual.edges))/float(len(self.possible_edges))
+                individual.fitness = throughput + 0.1 * efficiency
         self.POP.sort(key = lambda i: i.fitness, reverse = True)
-        self.POP[0].draw()
 
     def recombine(self, i1, i2):
         e1 = i1.graph.edges
@@ -67,9 +68,10 @@ class TopoOptimizer():
             print("Generation {}:".format(g))
             self.evaluate_all()
             print([np.round(i.fitness,2) for i in self.POP])
+            self.POP[0].draw(g)
             self.evolve()
             self.mutate()
 
 if __name__ == '__main__':
-    opt = TopoOptimizer(16, [8,4,4,4])
+    opt = TopoOptimizer(25, [8,8,8])
     opt.run(10)

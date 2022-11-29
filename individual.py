@@ -17,8 +17,8 @@ class Individual():
         self.topo = GraphTopo(self.graph, self.hosts)
         self.fitness = 0
 
-    def draw(self):
-        nx.write_graphml(self.graph, 'graph.graphml')
+    def draw(self, g = 0):
+        nx.write_graphml(self.graph, 'img/gen{}.graphml'.format(g))
 
 if __name__ == '__main__':
     I = Individual([0,1],[(0,1)])

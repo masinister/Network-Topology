@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
-G = nx.read_graphml('graph.graphml')
+G = nx.read_graphml('img/gen7.graphml')
 colormap = []
 for u in G.nodes:
     if u[1] == '0':
