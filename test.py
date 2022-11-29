@@ -15,7 +15,8 @@ class TestTopo(Topo):
             host = self.addHost('h%s' % h)
             self.addLink(host, switch, delay='10ms', max_queue_size = 10)
 
-def testone(net):
+def testone(topo):
+    net = Mininet(topo = topo, link = TCLink, controller = OVSController)
     net.start()
     hosts = net.hosts
     popens = {}
@@ -25,7 +26,7 @@ def testone(net):
         # Start pings
         # g = random.choice(hosts)
         for g in hosts:
-            popens[(h,g)] = h.popen("ping -c 100 -W 0.5 -i 0.01 -q {}".format(g.IP()))
+            # popens[(h,g)] = h.popen("ping -c 100 -W 0.5 -i 0.01 -q {}".format(g.IP()))
             popens[(h,g)] = h.popen("ping -w 1 -i 0.01 -q {}".format(g.IP()))
 
     # Monitor them and print output
@@ -44,5 +45,4 @@ def testone(net):
 if __name__ == '__main__':
     seconds = 3
     topo = TestTopo()
-    net = Mininet(topo = topo, link = TCLink, controller = OVSController)
-    testone(net)
+    print(testone(topo))
