@@ -27,20 +27,19 @@ def testone(topo):
         # g = random.choice(hosts)
         for g in hosts:
             # popens[(h,g)] = h.popen("ping -c 10 -W 0.1 -i 0.01 -q {}".format(g.IP()))
-            popens[(h,g)] = h.popen("ping -w 1 -i 0.001 -q {}".format(g.IP()))
+            if g != h:
+                popens[(h,g)] = h.popen("ping -w 1 -i 0.01 -q {}".format(g.IP()))
 
     # Monitor them and print output
-    sent = 0
-    lost = 0
+    loss = 0
     for conn, line in pmonitor(popens):
         if conn:
             # print("<%s, %s>: %s" % (conn[0].name, conn[1].name, line))
             type, v = parse_ping(line)
             if type == 'packets':
-                sent += v[0]
-                lost += v[1]
+                loss += (float(v[1])/float(v[0]))**2
     net.stop()
-    return sent, lost
+    return loss
 
 if __name__ == '__main__':
     seconds = 3
