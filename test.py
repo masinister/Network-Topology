@@ -32,14 +32,17 @@ def testone(topo):
 
     # Monitor them and print output
     loss = 0
+    rtt = 0
     for conn, line in pmonitor(popens):
         if conn:
             # print("<%s, %s>: %s" % (conn[0].name, conn[1].name, line))
             type, v = parse_ping(line)
             if type == 'packets':
                 loss += (float(v[1])/float(v[0]))**2
+            if type == 'rtt':
+                rtt += v[1]
     net.stop()
-    return loss
+    return loss, rtt
 
 if __name__ == '__main__':
     seconds = 3
