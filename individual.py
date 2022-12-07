@@ -13,9 +13,10 @@ class Individual():
         self.graph = nx.Graph()
         self.graph.add_nodes_from(nodes)
         self.graph.add_edges_from(self.edges)
-        self.isolated_hosts = any(h in nx.isolates(self.graph) for h in self.hosts)
+        self.isolated_hosts = sum(h in nx.isolates(self.graph) for h in self.hosts)
         self.topo = GraphTopo(self.graph, self.hosts)
         self.fitness = 0
+        self.counter = 0
 
     def draw(self, g = 0):
         nx.write_graphml(self.graph, 'img/gen{}.graphml'.format(g))
