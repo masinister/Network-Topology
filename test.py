@@ -28,7 +28,7 @@ def testone(topo):
         for g in hosts:
             # popens[(h,g)] = h.popen("ping -c 10 -W 0.1 -i 0.01 -q {}".format(g.IP()))
             if g != h:
-                popens[(h,g)] = h.popen("ping -w 1 -i 0.01 -q {}".format(g.IP()))
+                popens[(h,g)] = h.popen("sudo ping -w 1 -i 0.01 -q {}".format(g.IP()))
 
     # Monitor them and print output
     loss = 0
@@ -38,7 +38,7 @@ def testone(topo):
             # print("<%s, %s>: %s" % (conn[0].name, conn[1].name, line))
             type, v = parse_ping(line)
             if type == 'packets':
-                loss += (float(v[1])/float(v[0]))**2
+                loss += float(v[1])/float(v[0])
             if type == 'rtt':
                 rtt += v[1]
     net.stop()
