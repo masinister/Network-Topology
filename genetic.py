@@ -45,8 +45,7 @@ class TopoOptimizer():
         for individual in self.POP:
             if individual.isolated_hosts > 0:
                 individual.fitness = -individual.isolated_hosts
-            elif individual.counter <= 0 or individual.fitness == 0:
-                individual.counter = 1
+            else:
                 loss, rtt, conns = testone(individual.topo, self.interval)
                 if conns == 0:
                     avg_rtt = 1000
@@ -54,7 +53,6 @@ class TopoOptimizer():
                     avg_rtt = rtt / conns
 
                 avg_loss = loss / total_conns
-                throughput = 1.0 - avg_loss
                 efficiency = 1.0 - float(len(individual.edges))/float(len(self.possible_edges))
                 individual.ploss = avg_loss
                 individual.rtt = avg_rtt
@@ -63,12 +61,11 @@ class TopoOptimizer():
                     individual.fitness == 0
                 else:
                     individual.fitness = efficiency * 100. / (avg_rtt * math.sqrt(avg_loss))
-            individual.counter -= 1
         self.POP.sort(key = lambda i: i.fitness, reverse = True)
 
-        if self.POP[0].ploss < 0.05:
+        if self.POP[0].ploss < 0.7:
             self.interval = max(self.interval - 0.01, 0.02)
-        if self.POP[0].ploss > 0.1:
+        if self.POP[0].ploss > 0.15:
             self.interval = min(self.interval + 0.01, 0.2)
 
     def recombine(self, i1, i2):
@@ -140,5 +137,5 @@ class TopoOptimizer():
         plt.clf()
 
 if __name__ == '__main__':
-    opt = TopoOptimizer(16, [8,6,4])
-    opt.run(101)
+    opt = TopoOptimizer(32, [8,4,4])
+    opt.run(201)

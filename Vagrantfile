@@ -49,13 +49,13 @@ Vagrant.configure(2) do |config|
      find /vagrant -name "*" -type f | xargs dos2unix -q
 
      # Install Python packages
-     # sudo pip install mininet
-     # sudo pip install nbconvert
+     sudo pip install mininet
+     sudo pip install nbconvert
      sudo pip install numpy
      sudo pip install matplotlib
      sudo pip install networkx
-     # sudo pip install ipaddress
-     sudo apt-get install -y mininet
+     sudo pip install ipaddress
+     sudo apt-get install mininet
      # sudo apt-get install -y python-numpy
      # sudo apt-get install -y python-matplotlib
      # sudo apt-get install -y whois

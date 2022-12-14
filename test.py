@@ -25,7 +25,7 @@ def testone(topo, interval = 0.1):
     for h in hosts:
         for g in hosts:
             if g != h:
-                popens[(h,g)] = h.popen("ping -w 1 -i {} -q {}".format(interval, g.IP()))
+                popens[(h,g)] = h.popen("sudo ping -w 1 -i {} -q {}".format(interval, g.IP()))
 
     # Monitor them and print output
     loss = 0

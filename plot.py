@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import math
 
-path = 'img/gen50.graphml'
+path = 'img/gen200.graphml'
 G = nx.read_graphml(path)
 colormap = []
 color_dict = {}
