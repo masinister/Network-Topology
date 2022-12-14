@@ -67,9 +67,9 @@ class TopoOptimizer():
         self.POP.sort(key = lambda i: i.fitness, reverse = True)
 
         if self.POP[0].ploss < 0.05:
-            self.interval = max(self.interval - 0.01, 0.01)
+            self.interval = max(self.interval - 0.01, 0.02)
         if self.POP[0].ploss > 0.1:
-            self.interval = min(self.interval + 0.01, 0.1)
+            self.interval = min(self.interval + 0.01, 0.2)
 
     def recombine(self, i1, i2):
         e1 = i1.graph.edges
