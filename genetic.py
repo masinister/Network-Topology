@@ -7,7 +7,7 @@ from itertools import product, combinations
 from individual import Individual
 from test import testone
 import os
-
+import math
 
 class TopoOptimizer():
     # input:
@@ -27,6 +27,7 @@ class TopoOptimizer():
                 self.possible_edges.extend(list(product(self.layers[i-1], self.layers[i])))
         self.nodes = sum(self.layers, [])
         self.POP = self.random_population()
+        self.interval = 0.1
 
     def random_population(self):
         return [self.random_individual() for _ in range(self.pop_size)]
@@ -40,24 +41,35 @@ class TopoOptimizer():
         return Individual(self.nodes, self.layers[0], edges)
 
     def evaluate_all(self):
-        conns = (self.layer_sizes[0] * (self.layer_sizes[0] - 1))
+        total_conns = (self.layer_sizes[0] * (self.layer_sizes[0] - 1))
         for individual in self.POP:
             if individual.isolated_hosts > 0:
                 individual.fitness = -individual.isolated_hosts
             elif individual.counter <= 0 or individual.fitness == 0:
-                individual.counter = 10
-                loss, rtt = testone(individual.topo)
-                avg_rtt = rtt / conns
-                avg_loss = loss / conns
-                throughput = 1.0 - loss / conns
-                efficiency = 1.0 - float(len(individual.edges))/float(len(self.possible_edges))
+                individual.counter = 1
+                loss, rtt, conns = testone(individual.topo, self.interval)
+                if conns == 0:
+                    avg_rtt = 1000
+                else:
+                    avg_rtt = rtt / conns
 
-                if avg_rtt == 0 or avg_loss == 1:
+                avg_loss = loss / total_conns
+                throughput = 1.0 - avg_loss
+                efficiency = 1.0 - float(len(individual.edges))/float(len(self.possible_edges))
+                individual.ploss = avg_loss
+                individual.rtt = avg_rtt
+
+                if avg_loss == 1:
                     individual.fitness == 0
                 else:
-                    individual.fitness = efficiency * 100. / (avg_rtt**2 * avg_loss)
+                    individual.fitness = efficiency * 100. / (avg_rtt * math.sqrt(avg_loss))
             individual.counter -= 1
         self.POP.sort(key = lambda i: i.fitness, reverse = True)
+
+        if self.POP[0].ploss < 0.05:
+            self.interval = max(self.interval - 0.01, 0.01)
+        if self.POP[0].ploss > 0.1:
+            self.interval = min(self.interval + 0.01, 0.1)
 
     def recombine(self, i1, i2):
         e1 = i1.graph.edges
@@ -93,23 +105,40 @@ class TopoOptimizer():
     def run(self, generations):
         k=3
         topkfitness = [ [] for _ in range(k) ]
+        topkrtt = [ [] for _ in range(k) ]
+        topkloss = [ [] for _ in range(k) ]
         for g in range(generations):
             print("Generation {}:".format(g))
             self.evaluate_all()
-            print([np.round(i.fitness, 2) for i in self.POP])
+            print("fitness:", [np.round(i.fitness, 2) for i in self.POP])
+            print("rtt:", [np.round(i.rtt, 2) for i in self.POP])
+            print("loss:", [np.round(i.ploss, 2) for i in self.POP])
 
             if g % 10 == 0:
                 self.POP[0].draw(g)
 
             for i in range(k):
                 topkfitness[i].append(self.POP[i].fitness)
+                topkrtt[i].append(self.POP[i].rtt)
+                topkloss[i].append(self.POP[i].ploss)
 
             self.evolve()
 
         for i in range(k):
             plt.plot(topkfitness[i], label='{}'.format(i))
         plt.savefig('fitness.png')
+        plt.clf()
+
+        for i in range(k):
+            plt.plot(topkrtt[i], label='{}'.format(i))
+        plt.savefig('rtt.png')
+        plt.clf()
+
+        for i in range(k):
+            plt.plot(topkloss[i], label='{}'.format(i))
+        plt.savefig('loss.png')
+        plt.clf()
 
 if __name__ == '__main__':
-    opt = TopoOptimizer(50, [8,6,4])
-    opt.run(301)
+    opt = TopoOptimizer(16, [8,6,4])
+    opt.run(101)

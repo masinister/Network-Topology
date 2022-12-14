@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
 
   ## Configure hostname and port forwarding
   config.vm.hostname = "cs513"
+  config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
   # For jupyter notebook server
   config.vm.network "forwarded_port", guest: 8888, host: 8888
@@ -48,13 +49,13 @@ Vagrant.configure(2) do |config|
      find /vagrant -name "*" -type f | xargs dos2unix -q
 
      # Install Python packages
-     sudo pip install mininet
-     sudo pip install nbconvert
+     # sudo pip install mininet
+     # sudo pip install nbconvert
      sudo pip install numpy
      sudo pip install matplotlib
      sudo pip install networkx
-     sudo pip install ipaddress
-     # sudo apt-get install -y mininet
+     # sudo pip install ipaddress
+     sudo apt-get install -y mininet
      # sudo apt-get install -y python-numpy
      # sudo apt-get install -y python-matplotlib
      # sudo apt-get install -y whois
@@ -76,8 +77,8 @@ Vagrant.configure(2) do |config|
   ## CPU & RAM
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
-    vb.memory = 2048
-    vb.cpus = 1
+    vb.memory = 2048*4
+    vb.cpus = 6
   end
 
 end
